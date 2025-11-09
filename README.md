@@ -40,8 +40,8 @@ The steps below assume you have Terraform, kubectl, and AWS CLI access (with SSO
 2. **Install Karpenter, NodeClass/NodePools, demo workloads**
 
    ```bash
-  terraform -chdir=terraform/karpenter init
-  terraform -chdir=terraform/karpenter apply
+   terraform -chdir=terraform/karpenter init
+   terraform -chdir=terraform/karpenter apply
    ```
 
    This stack:
@@ -124,7 +124,7 @@ This POC provisions a new VPC and an EKS cluster on AWS with Karpenter enabled t
 
 3. Deploy Kubernetes CRDs, Provisioners, and optional workloads
    ```
-   cd ../demo
+   cd ../karpenter
    terraform init
    terraform apply
    ```
