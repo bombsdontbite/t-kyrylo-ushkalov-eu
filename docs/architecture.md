@@ -4,41 +4,42 @@
 
 Innovate Inc. is building a Python/Flask REST API paired with a React SPA. The company expects to start with a few hundred daily users and scale to millions, while handling sensitive user data and releasing continuously. The following design leverages AWS managed services to provide a secure, scalable, and cost-aware platform based on Amazon Elastic Kubernetes Service (EKS).
 
-```
-flowchart LR
-    subgraph AWS Organizations
-        subgraph Prod Account
-            VPC[VPC 10.30.0.0/16]
-            subgraph Public Subnets
-                ALB[Application Load Balancer]
+```mermaid
+flowchart TB
+    subgraph org[AWS Organizations]
+        subgraph prod[Prod Account]
+            subgraph prod_pub[Public Subnets]
+                alb[Application Load Balancer]
             end
-            subgraph Private Subnets
-                EKS[EKS Cluster]
-                RDS[(Amazon RDS
-PostgreSQL)]
+            subgraph prod_priv[Private Subnets]
+                eks_prod[EKS Cluster]
+            end
+            subgraph prod_db[Isolated Subnets]
+                rds_prod[(Amazon RDS\nPostgreSQL)]
             end
         end
-        subgraph Stage Account
-            VPCStage[Stage VPC]
-            EKSStage[EKS (managed node groups)]
+        subgraph stage[Stage Account]
+            eks_stage[EKS Cluster]
+            rds_stage[(RDS Postgres)]
         end
-        subgraph Dev Account
-            VPCDev[Dev VPC]
-            EKSDev[EKS (single node group)]
+        subgraph dev[Dev Account]
+            eks_dev[EKS Cluster]
         end
-        subgraph Shared Services Account
-            CI[CI/CD & Platform Tooling]
-            Artifact[Artifact Registry (ECR)]
+        subgraph shared[Shared Services Account]
+            ci_cd[CI/CD Tooling]
+            ecr[Artifact Registry (ECR)]
         end
-        subgraph Security Account
-            SecurityHub[Security Hub / GuardDuty]
-            Logging[Centralized Logging]
+        subgraph sec[Security Account]
+            guardduty[GuardDuty / SecurityHub]
+            logging[Central Logging]
         end
     end
-    Developers -->|Git push| CI -->|Build & scan images|
-        Artifact -->|Deploy manifests|
-        EKS
-    Users --> ALB --> EKS --> RDS
+    developers[Developers] -->|git push| ci_cd
+    ci_cd -->|build & scan| ecr
+    ecr -->|deploy manifests| eks_prod
+    users[End Users] --> alb --> eks_prod --> rds_prod
+    eks_prod -. metrics/logs .-> logging
+    eks_prod -. findings .-> guardduty
 ```
 
 ## Cloud Environment Structure
