@@ -15,7 +15,7 @@ flowchart TB
                 eks_prod[EKS Cluster]
             end
             subgraph prod_db[Isolated Subnets]
-                rds_prod[(Amazon RDS\nPostgreSQL)]
+                rds_prod[(Amazon RDS<br/>PostgreSQL)]
             end
         end
         subgraph stage[Stage Account]
