@@ -14,7 +14,7 @@ flowchart TB
             subgraph prod_priv["Private Subnets"]
                 eks_prod["EKS Cluster"]
             end
-            subgraph prod_db["Isolated Subnets"]
+            subgraph prod_db["Database Subnets"]
                 rds_prod["Amazon RDS<br/>PostgreSQL"]
             end
         end
@@ -73,11 +73,11 @@ Accounts are managed under AWS Organizations with Service Control Policies (SCPs
 - **Subnets:** Three availability zones, each with:
   - Public subnet (ALB, NAT gateways).
   - Private subnet (Kubernetes worker nodes, internal services).
-  - Isolated subnet (databases, no direct route to Internet).
+  - Database subnet (databases, no direct route to Internet).
 - **Routing:**
   - Public subnets route to the Internet Gateway.
   - Private subnets route through managed NAT gateways (one per AZ in prod for HA; single gateway in staging for cost savings).
-  - Isolated subnets only route within the VPC (no NAT or IGW).
+  - Database subnets only route within the VPC (no NAT or IGW).
 
 ### Network Security
 - AWS Network Firewall or security groups + NACLs control ingress/egress.
