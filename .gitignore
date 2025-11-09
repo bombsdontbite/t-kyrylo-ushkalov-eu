@@ -10,8 +10,11 @@ crash.log
 crash.*.log
 
 # Local variables and overrides
+# Allow explicitly tracked environment tfvars
 *.tfvars
 *.tfvars.json
+!terraform/infra/terraform.tfvars
+!terraform/karpenter/terraform.tfvars
 override.tf
 override.tf.json
 *_override.tf
