@@ -6,38 +6,38 @@ Innovate Inc. is building a Python/Flask REST API paired with a React SPA. The c
 
 ```mermaid
 flowchart TB
-    subgraph org[AWS Organizations]
-        subgraph prod[Prod Account]
-            subgraph prod_pub[Public Subnets]
-                alb[Application Load Balancer]
+    subgraph org["AWS Organizations"]
+        subgraph prod["Prod Account"]
+            subgraph prod_pub["Public Subnets"]
+                alb["Application Load Balancer"]
             end
-            subgraph prod_priv[Private Subnets]
-                eks_prod[EKS Cluster]
+            subgraph prod_priv["Private Subnets"]
+                eks_prod["EKS Cluster"]
             end
-            subgraph prod_db[Isolated Subnets]
-                rds_prod[(Amazon RDS<br/>PostgreSQL)]
+            subgraph prod_db["Isolated Subnets"]
+                rds_prod["Amazon RDS<br/>PostgreSQL"]
             end
         end
-        subgraph stage[Stage Account]
-            eks_stage[EKS Cluster]
-            rds_stage[(RDS Postgres)]
+        subgraph stage["Stage Account"]
+            eks_stage["EKS Cluster"]
+            rds_stage["Amazon RDS (PostgreSQL)"]
         end
-        subgraph dev[Dev Account]
-            eks_dev[EKS Cluster]
+        subgraph dev["Dev Account"]
+            eks_dev["EKS Cluster"]
         end
-        subgraph shared[Shared Services Account]
-            ci_cd[CI/CD Tooling]
-            ecr[Artifact Registry (ECR)]
+        subgraph shared["Shared Services Account"]
+            ci_cd["CI/CD Tooling"]
+            ecr["Artifact Registry (ECR)"]
         end
-        subgraph sec[Security Account]
-            guardduty[GuardDuty / SecurityHub]
-            logging[Central Logging]
+        subgraph sec["Security Account"]
+            guardduty["GuardDuty / SecurityHub"]
+            logging["Central Logging"]
         end
     end
-    developers[Developers] -->|git push| ci_cd
+    developers["Developers"] -->|git push| ci_cd
     ci_cd -->|build & scan| ecr
     ecr -->|deploy manifests| eks_prod
-    users[End Users] --> alb --> eks_prod --> rds_prod
+    users["End Users"] --> alb --> eks_prod --> rds_prod
     eks_prod -. metrics/logs .-> logging
     eks_prod -. findings .-> guardduty
 ```
